@@ -1,0 +1,8 @@
+Server Side Pages
+
+
+SPA
+  - Single page 
+  -swiftUI (apple)
+  -react (facebook)
+  -flutter (twitter)
