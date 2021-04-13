@@ -1,0 +1,402 @@
+Week 11 Day 1 Notes
+
+***REACT***
+
+React is a powerful framework for building single-page applications (SPAs). In Mustache we were creating different pages for displaying the registration, the login, the view-all-whatever page. How can we accomplish the same thing but all on just one page?
+
+In React, each section of the page - menu, footer, etc. is called a component. We can create the functionality of different pages by just changing out the content component in the center of the page.
+
+You could do this even without React - you know how to select an element by its ID, inject HTML with innerHTML or adjacentHTML. But React makes it much simpler.
+
+This makes the behavior of a website much more like a desktop/mobile application, without refreshing pages each time you want to do something different.
+
+Once you learn React, it opens the doors to learn React Native, Flutter, and Swift. Flutter and Swift are Google and Apple's (respectively) ways of creating apps.  (FB owns React.)  These are all pretty similar. React only runs on browsers, React Native runs on phone apps.
+
+Reactjs.org is the offical React site; it has good documentation available.  Azam has also linked his series of Youtube videos on React to our class Github under Day 1 for this week.
+
+With SPAs we are back to pages being created on the client side. The server returns JSON and then client-side code turns that into a display (like we did in week 4/week 5 with displaying news, restaurant dishes, coffee orders, etc). Sometimes this is a lot to put on the client machine.  So a hybrid approach is possible; Next.js generally does this - but it's not something we're going to learn in the scope of this course. If you look at Amazon, initial page loads are server-side, and most other things on the page - changing item size/color, asking a question about the item, looking at reviews - are all client-side.
+
+So...let's get started with our first SPA:
+
+In your project folder, in the terminal:
+npx create-react-app hello-react		// where hello-react is whatever your project name is
+					// yes, that is indeed npX instead of npM
+
+This process also initializes this folder as a git repository for you; you don't have to do a git init.
+
+Then: npm start
+
+This will open a browser window at localhost:3000. To begin with it will just show a dummy page with the React logo.
+
+Open a new tab in your terminal with command-T. (You don't need to stop the server.)
+
+Now, let's open the project in VSCode.
+
+In package.json we can see all the dependencies it created; in node_modules you can see all the different modules it has downloaded.  You can see it's already created a README file and a .gitignore file.
+
+index.html is there; it will be the only html page you have.
+
+Then in the src folder there are several .js files.
+
+Since we didn't stop the server, with React, it will automatically refresh and show changes as we make them. So we can put our browser off to the side to see our changes.
+
+If you open index.html and scroll down to the body tag, you can see this:
+<div id="root"></div>
+
+Ok, but nothing's in there, so how are we seeing the spinning React logo?
+
+In index.js, we can see it is getting an element and injecting some kind of App component into it. If we go to the browser and hit Inspect, within that same root div, there is now another div:
+<div class="App">
+
+The entire way that React works is by creating components and injecting them where you want on the page. You could shove an entire page into one component, but by separating them out into multiple components, they're more reusable.
+
+Inside App.js, we're going to replace the stuff that's already there.
+
+We'll start with class-based components (older way) and move into the newer way of function-based components (aka hooks) later in the week. Depending on where you go out in the field, either version may be in use.
+
+So let's wipe out everything currently in App.js and start over.
+
+import React, { Component } from 'react'	 // in node we used 'require', this is similar for React	
+
+
+class App extends Component {	// extends means App will inherit everything from Component class
+
+something something
+
+}
+
+export default App	// this exports the App component so it can be imported by index.js
+
+
+At this point we get an error, because we haven't actually told it to display anything!  We need the render function:
+
+import React, { Component } from 'react'	 
+
+class App extends Component {	
+  render() {
+    return (
+      <h1>Hello World</h1>
+    )
+  }
+}
+
+export default App
+
+Now, this displays Hello World on our page.
+
+Component files should always be saved with a capital letter, because they are classes.
+
+The HTML we're returning here is known as JSX, for "Javascript and XML". It's not 100% the same as HTML; if we try to add a class just like we would in HTML, class="foo", we get an error in the DevTools on our browser.  We can see in the error message that instead we should use className.  We'll learn more about the differences in JSX and HTML later.
+
+Another thing to know about React is that each component is rendering one parent thing. So if we also wanted an <h2> that displayed the date, we'd need to put both our <h1> and <h2> into an outer <div>:
+
+import React, { Component } from 'react'	 
+
+class App extends Component {	
+  render() {
+    return (
+      	<div>
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	</div>
+    )
+  }
+}
+
+export default App
+
+- - - - 
+Activity 0 - start a new project and display Hello, name on the page. Only modify the code within App.js.
+
+If you want to create a React app but don't want to create a separate repository, just go in once it's created and delete the .git file
+
+- - - - 
+
+So, what if we wanted to create a greet component?
+
+Inside the src folder, create Greet.js
+
+import React, { Component } from 'react';
+
+class Greet extends Component {
+  render() {
+    <h1>Hello Dave</h1>
+  }
+}
+
+export default Greet
+
+
+Now let's add it to our App:
+
+import React, { Component } from 'react'	 
+import './App.css'
+import Greet from './Greet'
+
+class App extends Component {	
+  render() {
+    return (
+      	<div>
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	<Greet />
+	</div>
+    )
+  }
+}
+
+export default App
+
+This will display the Greet component within the App component.
+
+What if we wanted to greet people with different names? We would need to create a property and pass a value to it. You can create and pass as many properties as you want, but don't go crazy. You can pass strings, but also functions (which we'll cover later).  Some other data types may not be able to be passed.
+
+import React, { Component } from 'react'	 
+import './App.css'
+import Greet from './Greet'
+
+class App extends Component {	
+  render() {
+    return (
+      	<div>
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	<Greet name="Mary" age="54"/>
+	</div>
+    )
+  }
+}
+
+export default App
+
+
+Ok, but this is still showing Hello Dave. How do we get it to show our passed values?
+
+Inside Greet.js:
+
+import React, { Component } from 'react';
+
+class Greet extends Component {
+  render() {
+    return (
+      <h1>Hello, {this.props.name} - age: {this.props.age}</h1>
+    )
+  }
+}
+
+export default Greet
+
+
+So this.props.name refers to this specific instance of the class, the properties of the class, and the specific property called "name". 
+
+Now it is displaying "Hello Mary - age: 54"
+
+So now we can do this in App.js:
+
+import React, { Component } from 'react'	 
+import './App.css'
+import Greet from './Greet'
+
+class App extends Component {	
+  render() {
+    return (
+      	<div>
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	<Greet name="Mary" age="54"/>
+	<Greet name="Alex" age="67"/>
+	</div>
+    )
+  }
+}
+
+export default App
+
+And our page will greet both Mary and Alex.
+
+Values pass from parent element to child element. Child elements cannot pass data to one another.
+
+Let's put together a Menu and a Footer component:
+
+import React, { Component } from 'react'	 
+
+
+class Menu extends Component {	
+  render() {
+    return (
+      <h1>Menu</h1>
+    )
+  }
+}
+
+class Footer extends Component {
+  render () {
+    return (
+      <h1>Footer stuff here</h1>
+    )
+  }
+}
+
+But how to export? export default won't work as there are two different classes in the file. So we need to use the **named export**
+
+import React, { Component } from 'react'	 
+
+
+export class Menu extends Component {	
+  render() {
+    return (
+      <h1>Menu</h1>
+    )
+  }
+}
+
+export class Footer extends Component {
+  render () {
+    return (
+      <h1>Footer stuff here</h1>
+    )
+  }
+}
+
+With the default export, you can rename it anything you want when you import:
+
+import MyGreetComponent from './Greet'
+
+But with the named export, you MUST use the class names when you import, and put it in curly braces:
+
+import { Menu, Footer } from './Menu'
+
+(This is why we do import React, { Component } from 'react'	)
+
+So then in our App.js, we can have:
+
+import React, { Component } from 'react'	 
+import './App.css'
+import Greet from './Greet'
+import { Menu, Footer } from './Menu'
+
+class App extends Component {	
+  render() {
+    return (
+      	<div>
+	<Menu />
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	<Greet name="Mary" age="54"/>
+	<Greet name="Alex" age="67"/>
+	<Footer />
+	</div>
+    )
+  }
+}
+
+
+- - - - 
+Activity 1 - Name Component 
+
+Create a React component called "Name". Load the component in the App component. From the App component pass the firstname and lastname properties to the Name component. The Name component should display the firstName and lastName passed by the App component in the following format:
+
+LastName, FirstName
+- - - - 
+
+How can we display a list in React?
+
+First we need to create a new component, TaskList.js
+
+import { Component } from 'react'
+
+class TaskList extends Component {
+  render() {
+    return (
+      <h1>Task List</h1>
+    )
+  }
+}
+
+export default TaskList
+
+Then in our App.js:
+
+import React, { Component } from 'react'	 
+import './App.css'
+import Greet from './Greet'
+import { Menu, Footer } from './Menu'
+import TaskList from './TaskList'
+
+class App extends Component {	
+  render() {
+    return (
+      	<div>
+	<Menu />
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	<Greet name="Mary" age="54"/>
+	<Greet name="Alex" age="67"/>
+	<TaskList />
+	<Footer />
+	</div>
+    )
+  }
+}
+
+Where do we change what is our root component? In index.js
+
+So we want to pass in a list of tasks. In the real world, this would come from a database or JSON from the server. But for now we'll hardcode a list within App.js:
+
+import React, { Component } from 'react'	 
+import './App.css'
+import Greet from './Greet'
+import { Menu, Footer } from './Menu'
+import TaskList from './TaskList'
+
+class App extends Component {	
+  render() {
+    const tasks = [
+      {name: "Mow lawn", priority: "high"}
+      {name: "Wash car", priority: "low"}
+    ]
+
+    return (
+      	<div>
+	<Menu />
+	<h1>Hello World</h1>
+	<h2>04/12/2021</h2>
+	<Greet name="Mary" age="54"/>
+	<Greet name="Alex" age="67"/>
+	<TaskList myTasks = {tasks}>
+	<Footer />
+	</div>
+    )
+  }
+}
+
+Then within TaskList.js:
+import { Component } from 'react'
+
+class TaskList extends Component {
+  render() {
+    const taskItems = this.props.allTasks.map((task, index) => {
+      return <li key={index}>{task.name}</li>	      // the index argument makes each <li> unique
+    })
+
+    return (
+      <div>
+      <h1>All Tasks</h1>
+      {taskItems}
+      </div>
+    )
+  }
+}
+
+export default TaskList
+
+There is a Chrome extension for React Developer Tools. This adds a separate Components tab to the Dev Tools that will let you look within components to see their properties.
+
+Question from Summer - why didn't we put our hard-coded list of tasks within TaskList.js?
+Per Azam - the TaskList.js file is only really interested in displaying the tasks. To make this component as lean as possible, it should be doing only one job.  This will become more clear later in the week once we're getting our task list from a server. We want to pass data down to child components from parent components - this makes the child components more reusable.
+
+- - - - 
+ASSIGNMENT
+- - - - 
+Recreate the UI (styling not mandatory) for the "HighOnCoding" site shown on the class GitHub. How would you divide the site into smaller components. Would the Hello WatchKit part and the Intro to Swift part be separate components or different instances of the same components?  No arrays or looping needed (you can if you want to, but you don't have to).  Maybe you have a menu component, a featured article component, a regular article component that you use multiple times?
+
